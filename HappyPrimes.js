@@ -32,19 +32,22 @@ function isHappyPrime(num) {
   var digits = ('' + num).split('');
   digits.forEach(function(digit) {
     factored = digit * digit;
-
-    if (isPrime(factored)) {
-      temp.push(factored)
-
-    }
+    temp.push(factored)
   });
+  if (temp.length === 1) {
+    if (isPrime(temp[0])) {
+      return num + " is not happy and is not a Prime";
+    }
+  }
+
+
   console.log(temp);
   var sum = 0;
   temp.forEach(function(num) {
     sum += num;
   })
 
-  if (isPrime(num)) {
+  if (isPrime(sum)) {
     return num + " is a happy prime!";
   } else {
     return num + " is not happy at all! :("

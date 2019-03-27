@@ -34,4 +34,3 @@ fetch('http://localhost:3000/MOCK_DATA.json').then((res) => {
     document.querySelector('#info').innerHTML = returnUserInfo;
 
 }).catch(err => console.log(err.message));
-

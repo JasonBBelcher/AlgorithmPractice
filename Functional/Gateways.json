@@ -1,0 +1,62 @@
+[
+  {
+    "CG_Id": "G5",
+    "GID": "932539",
+    "CODE": "IMBFMT",
+    "MAC": "70:B3:D5:37:75:B2\r"
+  },
+  {
+    "CG_Id": "G4",
+    "GID": "932549",
+    "CODE": "IMBUHJ",
+    "MAC": "70:B3:D5:37:75:B9\r"
+  },
+  {
+    "CG_Id": "G3",
+    "GID": "932545",
+    "CODE": "IMFAOT",
+    "MAC": "70:B3:D5:37:75:BA\r"
+  },
+  {
+    "CG_Id": "G1",
+    "GID": "932547",
+    "CODE": "IMQKLB",
+    "MAC": "70:B3:D5:37:75:AE\r"
+  },
+  {
+    "CG_Id": "G2",
+    "GID": "932543",
+    "CODE": "IMTQSL",
+    "MAC": "70:B3:D5:37:75:BB\r"
+  },
+  {
+    "CG_Id": "G8",
+    "GID": "932546",
+    "CODE": "IMKSMX",
+    "MAC": "70:B3:D5:37:75:B3\r"
+  },
+  {
+    "CG_Id": "G9",
+    "GID": "932541",
+    "CODE": "IMIGWD",
+    "MAC": "70:B3:D5:37:75:B8\r"
+  },
+  {
+    "CG_Id": "G6",
+    "GID": "932542",
+    "CODE": "IMNYUH",
+    "MAC": "70:B3:D5:37:75:B1\r"
+  },
+  {
+    "CG_Id": "G10",
+    "GID": "932544",
+    "CODE": "IMZIQP",
+    "MAC": "70:B3:D5:37:75:B0\r"
+  },
+  {
+    "CG_Id": "G7",
+    "GID": "932548",
+    "CODE": "IMWCJF",
+    "MAC": "70:B3:D5:37:75:AF"
+  }
+]

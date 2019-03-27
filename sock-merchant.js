@@ -1,3 +1,5 @@
+// sock merchant
+
 function sockMerchant(n, ar) {
   const map = {};
   const colorMap = {};

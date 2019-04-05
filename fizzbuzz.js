@@ -30,3 +30,31 @@ while (i < 100) {
 }
 
 console.log(fizzBuzz(sampleArr));
+
+// solution 2
+
+function divisibleBy(num, div) {
+  return num % div === 0;
+}
+
+function fuzzBizz(num) {
+  if (divisibleBy(num, 3) && divisibleBy(num, 5)) {
+    return 'FizzBuzz \n';
+  } else if (divisibleBy(num, 3)) {
+    return 'Fizz \n';
+  } else if (divisibleBy(num, 5)) {
+    return 'Buzz \n';
+  } else {
+    return '';
+  }
+}
+
+function fuzzBizzIt(sampleArr) {
+  let result = '';
+  sampleArr.forEach(number => {
+    result += fuzzBizz(number);
+  });
+  return result;
+}
+
+console.log(fuzzBizzIt(sampleArr));

@@ -1,4 +1,4 @@
-// Composition over inheritance
+// Composition over inheritance with Factory functions
 
 function synthFactory(manufacturer, type, model) {
   return function() {

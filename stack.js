@@ -39,7 +39,7 @@ class Stack {
 }
 
 const myStack = new Stack();
-
+console.log(myStack.isEmpty());
 myStack.push("hello there!");
 myStack.push("How are ya?!");
 console.log(myStack.peek());
@@ -50,3 +50,4 @@ console.log(myStack.peek());
 myStack.pop();
 console.log(myStack.peek());
 console.log(myStack.inspectStack());
+console.log(myStack.isEmpty());

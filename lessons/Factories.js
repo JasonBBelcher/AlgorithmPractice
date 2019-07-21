@@ -1,7 +1,8 @@
 // Composition over inheritance with Factory functions
 // No classes were hurt in the making of this file.
 
-// single factory functions utilizing higher order functions so that we may pass arguments without returning the object yet
+// single factory functions utilizing higher order functions
+// to pass arguments without returning the object at same time
 
 function synthFactory(manufacturer, type, model) {
   return function() {
@@ -94,7 +95,7 @@ function printTheBand(band) {
   }
 }
 
-printTheBand();
+printTheBand(theBandInstruments);
 
 // create individual instrument factories
 const d50 = synthFactory("Roland", "Linear Arithmetic", "D-50")();
@@ -144,7 +145,7 @@ function findAllInstrumentsByProperty(prop) {
 function instrumentInventory(...factories) {
   let inventory = {};
   factories.forEach(factory => {
-    Object.assign(band, factory());
+    Object.assign(inventory, factory());
   });
 
   inventory.findAllInstrumentsByProperty = findAllInstrumentsByProperty;

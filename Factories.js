@@ -1,4 +1,7 @@
 // Composition over inheritance with Factory functions
+// No classes were hurt in the making of this file.
+
+// single factory functions utilizing higher order functions so that we may pass arguments without returning the object yet
 
 function synthFactory(manufacturer, type, model) {
   return function() {
@@ -46,6 +49,13 @@ function drumsetFactory(manufacturer, type, model) {
   };
 }
 
+/*
+  bandFactory takes in a list of factories as args and loops over
+  them and calls each one, assigns each one a name based on
+  the manufacturer name.  Lastly it returns the
+  composed parent object with each instrument object attached
+ */
+
 function bandFactory(...factories) {
   let band = {};
   factories.forEach(factory => {
@@ -55,12 +65,16 @@ function bandFactory(...factories) {
   return band;
 }
 
+// this will always point to the right object because this is determined
+// by it's call site not it's location.
+
 function displayProperties() {
   return `I am a ${this.type} ${this.instrument} made by ${
     this.manufacturer
   } and my model is: ${this.model}`;
 }
 
+// lets use the factory of factories.
 const theBandInstruments = bandFactory(
   synthFactory("Moog", "semi-modular", "mother-32"),
   guitarFactory("Fender", "electric", "telecaster"),
@@ -68,15 +82,29 @@ const theBandInstruments = bandFactory(
   drumsetFactory("Gretsch", "small", "GS1")
 );
 
-Object.keys(theBandInstruments).forEach(key => {
-  console.log(theBandInstruments[key].displayProperties());
-});
+// when called prints the passed in composed factory of factories
 
+function printTheBand(band) {
+  if (band) {
+    Object.keys(band).forEach(key => {
+      console.log(band[key].displayProperties());
+    });
+  } else {
+    console.error("***please pass in a band factory***");
+  }
+}
+
+printTheBand();
+
+// create individual instrument factories
 const d50 = synthFactory("Roland", "Linear Arithmetic", "D-50")();
 const d70 = synthFactory("Roland", "Linear Arithmetic", "D-70")();
 
+// call individual methods
 console.log(d50.displayProperties());
 console.log(d70.displayProperties());
+
+// dynamically creates any kind of instrument object not just a specific type
 
 function instrumentFactory(name, brand) {
   name = name.replace(/ /g, "").toLowerCase();
@@ -90,29 +118,38 @@ function instrumentFactory(name, brand) {
 
 function findAllInstrumentsByProperty(prop) {
   prop = prop.replace(/ /g, "").toLowerCase();
+
   instrumentsByProp = [];
   const regex = new RegExp(prop + ".*");
+  // loop over each key and see if the prop being searched for
+  // is the name or brand.
   Object.keys(this).forEach(instrument => {
     if (this[instrument].brand === prop) {
       instrumentsByProp.push(instrument);
     }
 
+    // if it's the name we match the key word and anything after it
+    // guitar, guitar1, guitar2 etc would match passing in "guitar"
     if (this[instrument].name.match(regex)) {
       instrumentsByProp.push(instrument);
     }
   });
+  // return the basic stats for the prop searched for.
   return { [prop]: instrumentsByProp, count: instrumentsByProp.length };
 }
 
+// factory of factories takes in instrument factories and creates an inventory of all the instruments
+// in an imaginary music store. This time merge all the objects returned into the inventory object
+
 function instrumentInventory(...factories) {
-  let band = {};
+  let inventory = {};
   factories.forEach(factory => {
     Object.assign(band, factory());
   });
 
-  band.findAllInstrumentsByProperty = findAllInstrumentsByProperty;
+  inventory.findAllInstrumentsByProperty = findAllInstrumentsByProperty;
 
-  return band;
+  return inventory;
 }
 
 const inventory = instrumentInventory(

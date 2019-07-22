@@ -50,6 +50,15 @@ function drumsetFactory(manufacturer, type, model) {
   };
 }
 
+// this will always point to the right object because this is determined
+// by it's call site not it's location.
+
+function displayProperties() {
+  return `I am a ${this.type} ${this.instrument} made by ${
+    this.manufacturer
+  } and my model is: ${this.model}`;
+}
+
 /*
   bandFactory takes in a list of factories as args and loops over
   them and calls each one, assigns each one a name based on
@@ -60,19 +69,10 @@ function drumsetFactory(manufacturer, type, model) {
 function bandFactory(...factories) {
   let band = {};
   factories.forEach(factory => {
-    band[factory().manufacturer] = factory();
+    band[factory().instrument] = factory();
   });
 
   return band;
-}
-
-// this will always point to the right object because this is determined
-// by it's call site not it's location.
-
-function displayProperties() {
-  return `I am a ${this.type} ${this.instrument} made by ${
-    this.manufacturer
-  } and my model is: ${this.model}`;
 }
 
 // lets use the factory of factories.
@@ -82,6 +82,8 @@ const theBandInstruments = bandFactory(
   pianoFactory("Steinway", "grand", "model S"),
   drumsetFactory("Gretsch", "small", "GS1")
 );
+
+console.log(theBandInstruments.piano.model);
 
 // when called prints the passed in composed factory of factories
 
@@ -174,3 +176,58 @@ console.log(inventory.findAllInstrumentsByProperty("Yamaha"));
 console.log(inventory.findAllInstrumentsByProperty("gibson"));
 console.log(inventory.findAllInstrumentsByProperty("guitar"));
 console.log(inventory.findAllInstrumentsByProperty("bass"));
+
+// inherit stuff without classes
+
+function Dinosaur(name) {
+  function poo() {
+    console.log(`${name} poo poos.`);
+  }
+  function bite() {
+    console.log(`${name} bites and chomps!`);
+  }
+  return { poo, bite };
+}
+
+// Dragons are magical so the poop rainbows
+function Dragon(name) {
+  const { bite } = Dinosaur(name);
+  function poo() {
+    console.log(`${name} poos rainbows and confetti`);
+  }
+  function breathFire() {
+    console.log(`${name} breathes fire and roasts you! `);
+  }
+  return { breathFire, bite, poo };
+}
+
+const XerxesTheDragon = Dragon("Xerxes");
+
+XerxesTheDragon.bite();
+XerxesTheDragon.breathFire();
+XerxesTheDragon.poo();
+
+function FlyingDinosaur(name) {
+  const proto = Dinosaur(name);
+  function fly() {
+    console.log(`${name} flaps it's wings and takes off into the air!`);
+  }
+  return Object.assign({}, proto, { fly });
+}
+
+function FlyingDragon(name) {
+  const { fly } = FlyingDinosaur(name);
+  const proto = Dragon(name);
+
+  return Object.assign({}, proto, { fly });
+}
+
+const PuffyD = FlyingDragon("Puff the Magic Dragon");
+PuffyD.bite();
+PuffyD.fly();
+PuffyD.poo();
+
+const SamTheDino = Dinosaur("Sam");
+
+SamTheDino.bite();
+SamTheDino.poo();

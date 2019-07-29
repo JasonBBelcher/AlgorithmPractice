@@ -23,7 +23,6 @@ function dataInterface(props, record) {
   if (typeof record === "object" && record !== null) {
     let bool = true;
 
-    Object.keys(record).includes(props);
     props.forEach(prop => {
       if (!record.hasOwnProperty(prop) || typeof prop !== "string") {
         bool = false;

@@ -1,5 +1,3 @@
-let data = require("./data/MOCK_DATA.json");
-
 // create a dataStore in JavaScript
 
 // shape of the data set
@@ -8,17 +6,71 @@ let data = require("./data/MOCK_DATA.json");
 // last_name
 // email
 // gender
+
 const interfaceProps = ["first_name", "last_name", "email", "gender"];
 
 function dataStore(dataset, interface) {
+  let sortDirection = "ASC";
+  let sortProp = interface[0];
+
+  function setSortProp(prop) {
+    sortProp = prop;
+  }
+
+  function setSortDirection(direction) {
+    if (direction === "DESC") {
+      sortDirection = direction;
+      console.log("direction set to :", direction);
+    }
+    if (direction === "ASC") {
+      sortDirection = direction;
+      console.log("direction set to :", direction);
+    } else {
+      console.error("direction should be DESC or ASC");
+    }
+  }
+  // private method
+
   function createId() {
     return Math.random()
       .toString(10)
       .substr(2);
   }
 
-  // enforce the shape of the data when creating records
+  function sortDataset() {
+    if (sortDirection === "ASC") {
+      dataset.sort((a, b) => {
+        if (a[sortProp] < b[sortProp]) {
+          return -1;
+        }
 
+        if (a[sortProp] > b[sortProp]) {
+          return 1;
+        }
+      });
+    }
+    if (sortDirection === "DESC") {
+      dataset.sort((a, b) => {
+        if (a[sortProp] > b[sortProp]) {
+          return -1;
+        }
+
+        if (a[sortProp] < b[sortProp]) {
+          return 1;
+        }
+      });
+    }
+    return dataset;
+  }
+
+  function printAllRecords(direction, prop) {
+    setSortDirection(direction);
+    setSortProp(prop);
+    console.table(sortDataset());
+  }
+
+  // enforce the shape of the data when creating records
+  // private method
   function dataInterface(props, record) {
     if (typeof record === "object" && record !== null) {
       let bool = true;
@@ -34,7 +86,9 @@ function dataStore(dataset, interface) {
       return bool;
     }
   }
-
+  // checks to make sure that properties passed in will conform
+  // to the interface passed into the factory
+  // private method
   function conformToInterface(props, record) {
     if (typeof record === "object" && record !== null) {
       let checkedRecord = {};
@@ -58,8 +112,7 @@ function dataStore(dataset, interface) {
       dataset.push(record);
       return dataset[dataset.length - 1];
     } else {
-      console.error("error creating record.");
-      return null;
+      return { error: "error creating record" };
     }
   }
 
@@ -67,83 +120,94 @@ function dataStore(dataset, interface) {
 
   function findRecordById(id) {
     let foundRecord = null;
-    dataset.forEach(r => {
-      if (r.id === id) {
-        foundRecord = r;
-      }
-    });
+    if (id) {
+      dataset.forEach(r => {
+        if (r.id === id) {
+          foundRecord = r;
+        }
+      });
 
-    return foundRecord;
+      return foundRecord;
+    } else {
+      return { error: "please provide an id." };
+    }
   }
 
-  function getRecordsByPropertyFilter(propArg) {
+  function getRecordsByPropertyFilter(propArgs) {
     let foundRecords = [];
     let transformerObject = {};
-    if (Array.isArray(propArg)) {
-      dataset.forEach((r, i) => {
-        Object.keys(r).forEach(key => {
-          if (propArg[i] === key) transformerObject[key] = r[key];
+    if (propArgs) {
+      if (Array.isArray(propArgs)) {
+        dataset.forEach((r, i) => {
+          Object.keys(r).forEach(key => {
+            if (propArgs[i] === key) transformerObject[key] = r[key];
+          });
+          foundRecords.push(transformerObject);
         });
-        foundRecords.push(transformerObject);
-      });
 
-      return foundRecords;
+        return foundRecords;
+      } else {
+        dataset.forEach(r => {
+          foundRecords.push({ [propArgs]: r[propArgs] });
+        });
+        return foundRecords;
+      }
     } else {
-      dataset.forEach(r => {
-        foundRecords.push({ [propArg]: r[propArg] });
-      });
-      return foundRecords;
+      return {
+        error: "no arguments supplied. Please provide one or more properties."
+      };
     }
   }
 
   function findRecordsByName(prop, name) {
     const foundRecords = [];
-
-    dataset.forEach(r => {
-      if (r[prop] === name) {
-        foundRecords.push(r);
-      }
-    });
-    return foundRecords;
+    if (prop && name) {
+      dataset.forEach(r => {
+        if (r[prop] === name) {
+          foundRecords.push(r);
+        }
+      });
+      return foundRecords;
+    }
   }
 
   // update
 
   function findByIdAndUpdate(id, updatedRecord) {
     let updatedR = null;
-    if (dataset) {
-      if (id) {
-        if (updatedRecord) {
-          dataset.forEach(r => {
-            if (r.id == id) {
-              updatedR = conformToInterface(
-                interfaceProps,
-                Object.assign({}, r, updatedRecord)
-              );
-            }
-          });
+    if (id) {
+      if (updatedRecord) {
+        dataset.forEach(r => {
+          if (r.id == id) {
+            updatedR = conformToInterface(
+              interfaceProps,
+              Object.assign({}, r, updatedRecord)
+            );
+          }
+        });
 
-          return updatedR;
-        } else {
-          return { error: "no data provided to update record." };
-        }
+        return updatedR;
       } else {
-        return { error: "no id provided for lookup" };
+        return { error: "no data provided to update record." };
       }
     } else {
-      return { error: "dataset not provided" };
+      return { error: "no id provided for lookup" };
     }
   }
 
   // delete
 
   function deleteById(id) {
-    dataset.forEach((record, i) => {
-      if (record.id == id) {
-        console.log(dataset.splice(i, 1), " deleted");
-        return record;
-      }
-    });
+    if (id) {
+      dataset.forEach((record, i) => {
+        if (record.id == id) {
+          console.log(dataset.splice(i, 1), " deleted");
+          return record;
+        }
+      });
+    } else {
+      return { error: "please provide an id." };
+    }
   }
 
   function save() {
@@ -158,11 +222,12 @@ function dataStore(dataset, interface) {
     getRecordsByPropertyFilter,
     findByIdAndUpdate,
     deleteById,
-    save
+    save,
+    printAllRecords
   };
 }
 
-const dbCollection = dataStore(data, interfaceProps);
+const dbCollection = dataStore([], interfaceProps);
 
 console.log(
   dbCollection.createRecord({
@@ -172,19 +237,21 @@ console.log(
     email: "belcher.jason@gmail.com"
   })
 );
-
-console.log(dbCollection.getRecordsByPropertyFilter(["email", "gender"]));
-console.log(dbCollection.getRecordsByPropertyFilter(["email", "first_name"]));
-console.log(dbCollection.getRecordsByPropertyFilter("email"));
-console.log(dbCollection.getRecordsByPropertyFilter("id"));
-console.log(dbCollection.findByIdAndUpdate(1, { first_name: "Jason" }));
 console.log(
-  dbCollection.findByIdAndUpdate(1, { last_name: "Belcher", age: 45 })
+  dbCollection.createRecord({
+    first_name: "Alison",
+    last_name: "Belcher",
+    gender: "Female",
+    email: "alisonbelcher@gmail.com"
+  })
 );
-console.log(dbCollection.findByIdAndUpdate());
-console.log(dbCollection.findByIdAndUpdate(1));
 console.log(
-  dbCollection.findByIdAndUpdate(1, { last_name: "Bell", test: "blah" })
+  dbCollection.createRecord({
+    first_name: "Ben",
+    last_name: "Belcher",
+    gender: "Male",
+    email: "benbelcher@gmail.com"
+  })
 );
 
-console.log(dbCollection.save());
+dbCollection.printAllRecords("DESC", "first_name");

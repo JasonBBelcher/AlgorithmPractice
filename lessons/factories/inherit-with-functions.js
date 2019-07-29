@@ -10,7 +10,7 @@ function Dinosaur(name) {
   return { poo, bite };
 }
 
-// Dragons are magical so the poop rainbows
+// Dragons are magical so they poop rainbows
 function Dragon(name) {
   const { bite } = Dinosaur(name);
   function poo() {

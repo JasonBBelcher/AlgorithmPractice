@@ -11,7 +11,7 @@ let data = require("./data/MOCK_DATA.json");
 
 const interfaceProps = ["first_name", "last_name", "email", "gender"];
 
-function createUUID() {
+function createId() {
   return Math.random()
     .toString(10)
     .substr(2);
@@ -53,7 +53,7 @@ function conformToInterface(props, record) {
 // create
 
 function createRecord(dataset, record) {
-  record.id = createUUID();
+  record.id = createId();
   if (dataInterface(interfaceProps, record)) {
     dataset.push(record);
     return dataset[dataset.length - 1];

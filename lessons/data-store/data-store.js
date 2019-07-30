@@ -10,6 +10,54 @@
 const interfaceProps = ["first_name", "last_name", "email", "gender"];
 
 function dataStore(dataset, interface) {
+  /* ***********************
+  PRIVATE FIELDS & METHODS
+  **************************/
+
+  // create a random id for lookup
+  function createId() {
+    return Math.random()
+      .toString(10)
+      .substr(2);
+  }
+
+  // enforce the shape of the data when creating records
+  function dataInterface(props, record) {
+    if (typeof record === "object" && record !== null) {
+      let bool = true;
+
+      props.forEach(prop => {
+        if (!record.hasOwnProperty(prop) || typeof prop !== "string") {
+          bool = false;
+        }
+      });
+      if (!bool) {
+        console.error("data must conform to this interface");
+      }
+      return bool;
+    }
+  }
+  // checks to make sure that properties passed in will conform
+  // to the interface passed into the factory
+  // private method
+
+  function conformToInterface(props, record) {
+    if (typeof record === "object" && record !== null) {
+      let checkedRecord = {};
+      const keysInRecord = Object.keys(record);
+      props.forEach(prop => {
+        console.log(prop);
+        if (keysInRecord.includes(prop)) {
+          checkedRecord[prop] = record[prop];
+        }
+      });
+
+      return checkedRecord;
+    }
+  }
+
+  // sorting
+
   let sortDirection = "ASC";
   let sortProp = interface[0];
 
@@ -28,13 +76,6 @@ function dataStore(dataset, interface) {
     } else {
       console.error("direction should be DESC or ASC");
     }
-  }
-  // private method
-
-  function createId() {
-    return Math.random()
-      .toString(10)
-      .substr(2);
   }
 
   function sortDataset() {
@@ -63,48 +104,19 @@ function dataStore(dataset, interface) {
     return dataset;
   }
 
+  // Print records with
+
   function printAllRecords(direction, prop) {
     setSortDirection(direction);
     setSortProp(prop);
     console.table(sortDataset());
   }
 
-  // enforce the shape of the data when creating records
-  // private method
-  function dataInterface(props, record) {
-    if (typeof record === "object" && record !== null) {
-      let bool = true;
+  /****************************
+        CRUD OPERATIONS
+  *****************************/
 
-      props.forEach(prop => {
-        if (!record.hasOwnProperty(prop) || typeof prop !== "string") {
-          bool = false;
-        }
-      });
-      if (!bool) {
-        console.error("data must conform to this interface");
-      }
-      return bool;
-    }
-  }
-  // checks to make sure that properties passed in will conform
-  // to the interface passed into the factory
-  // private method
-  function conformToInterface(props, record) {
-    if (typeof record === "object" && record !== null) {
-      let checkedRecord = {};
-      const keysInRecord = Object.keys(record);
-      props.forEach(prop => {
-        console.log(prop);
-        if (keysInRecord.includes(prop)) {
-          checkedRecord[prop] = record[prop];
-        }
-      });
-
-      return checkedRecord;
-    }
-  }
-
-  // create
+  // CREATE
 
   function createRecord(record) {
     record.id = createId();
@@ -116,7 +128,7 @@ function dataStore(dataset, interface) {
     }
   }
 
-  // read
+  // READ
 
   function findRecordById(id) {
     let foundRecord = null;
@@ -171,7 +183,7 @@ function dataStore(dataset, interface) {
     }
   }
 
-  // update
+  // UPDATE
 
   function findByIdAndUpdate(id, updatedRecord) {
     let updatedR = null;
@@ -195,7 +207,7 @@ function dataStore(dataset, interface) {
     }
   }
 
-  // delete
+  // DELETE
 
   function deleteById(id) {
     if (id) {
@@ -210,9 +222,14 @@ function dataStore(dataset, interface) {
     }
   }
 
-  function save() {
-    // save to localStorage
-    console.log("save to localStorage or json file");
+  function save(name) {
+    console.log("saving dataset to name: ", name);
+    localStorage.setItem(name, JSON.stringify(dataset));
+  }
+
+  function load(name) {
+    console.log("loading... ", name);
+    dataset = JSON.parse(localStorage.getItem(name));
   }
 
   return {
@@ -223,6 +240,7 @@ function dataStore(dataset, interface) {
     findByIdAndUpdate,
     deleteById,
     save,
+    load,
     printAllRecords
   };
 }

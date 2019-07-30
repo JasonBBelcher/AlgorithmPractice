@@ -238,6 +238,11 @@ function dataStore(dataset, interface) {
     dataset = JSON.parse(localStorage.getItem(name));
   }
 
+  /****************************
+   *
+   * PUBLIC METHODS
+   */
+
   return {
     createRecord,
     findRecordById,

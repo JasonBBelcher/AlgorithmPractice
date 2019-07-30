@@ -1,4 +1,4 @@
-// create a dataStore in JavaScript
+// create a dataStore lib in JavaScript using a factory
 
 function dataStore(dataset, interface) {
   /* ***********************
@@ -19,8 +19,7 @@ function dataStore(dataset, interface) {
 
       props.forEach(prop => {
         if (!record.hasOwnProperty(prop)) {
-          if (typeof prop !== "string" || typeof prop !== "number")
-            bool = false;
+          bool = false;
         }
       });
       if (!bool) {
@@ -101,6 +100,7 @@ function dataStore(dataset, interface) {
   function printAllRecords(direction, prop) {
     if (!prop) {
       setSortDirection(direction);
+    } else if (!prop || !direction) {
     } else {
       setSortDirection(direction);
       setSortProp(prop);
@@ -141,11 +141,14 @@ function dataStore(dataset, interface) {
       return { error: "please provide an id." };
     }
   }
-
+  // This method can change the shape of the dataset.
+  // useful for reporting on only the properties you want to see
   function getRecordsByPropertyFilter(propArgs) {
     let foundRecords = [];
     let transformerObject = {};
+    // check if it exists as an argument at all
     if (propArgs) {
+      // check if it is an array
       if (Array.isArray(propArgs)) {
         dataset.forEach((r, i) => {
           Object.keys(r).forEach(key => {
@@ -155,6 +158,7 @@ function dataStore(dataset, interface) {
         });
 
         return foundRecords;
+        // just use a string passed in as argument
       } else {
         dataset.forEach(r => {
           foundRecords.push({ [propArgs]: r[propArgs] });
@@ -179,6 +183,9 @@ function dataStore(dataset, interface) {
       return foundRecords;
     }
   }
+
+  // simply returns the dataset
+  // useful for the view layer
 
   function getAllRecords() {
     return dataset;
@@ -241,7 +248,7 @@ function dataStore(dataset, interface) {
   /****************************
    *
    * PUBLIC METHODS
-   */
+   ****************************/
 
   return {
     createRecord,

@@ -1,14 +1,5 @@
 // create a dataStore in JavaScript
 
-// shape of the data set
-// id
-// first_name
-// last_name
-// email
-// gender
-
-const interfaceProps = ["first_name", "last_name", "email", "gender"];
-
 function dataStore(dataset, interface) {
   /* ***********************
   PRIVATE FIELDS & METHODS
@@ -27,8 +18,9 @@ function dataStore(dataset, interface) {
       let bool = true;
 
       props.forEach(prop => {
-        if (!record.hasOwnProperty(prop) || typeof prop !== "string") {
-          bool = false;
+        if (!record.hasOwnProperty(prop)) {
+          if (typeof prop !== "string" || typeof prop !== "number")
+            bool = false;
         }
       });
       if (!bool) {
@@ -37,9 +29,9 @@ function dataStore(dataset, interface) {
       return bool;
     }
   }
-  // checks to make sure that properties passed in will conform
-  // to the interface passed into the factory
-  // private method
+
+  // allow only properties to be updated that exist on the interface
+  // used on updates so that partial updates (patches) can be made
 
   function conformToInterface(props, record) {
     if (typeof record === "object" && record !== null) {
@@ -107,8 +99,13 @@ function dataStore(dataset, interface) {
   // Print records with
 
   function printAllRecords(direction, prop) {
-    setSortDirection(direction);
-    setSortProp(prop);
+    if (!prop) {
+      setSortDirection(direction);
+    } else {
+      setSortDirection(direction);
+      setSortProp(prop);
+    }
+
     console.table(sortDataset());
   }
 
@@ -120,7 +117,7 @@ function dataStore(dataset, interface) {
 
   function createRecord(record) {
     record.id = createId();
-    if (dataInterface(interfaceProps, record)) {
+    if (dataInterface(interface, record)) {
       dataset.push(record);
       return dataset[dataset.length - 1];
     } else {
@@ -183,6 +180,10 @@ function dataStore(dataset, interface) {
     }
   }
 
+  function getAllRecords() {
+    return dataset;
+  }
+
   // UPDATE
 
   function findByIdAndUpdate(id, updatedRecord) {
@@ -223,11 +224,16 @@ function dataStore(dataset, interface) {
   }
 
   function save(name) {
+    console.log("dataset to be saved: ", dataset);
     console.log("saving dataset to name: ", name);
     localStorage.setItem(name, JSON.stringify(dataset));
   }
 
   function load(name) {
+    console.log(
+      "dataset to be loaded: ",
+      JSON.parse(localStorage.getItem(name))
+    );
     console.log("loading... ", name);
     dataset = JSON.parse(localStorage.getItem(name));
   }
@@ -241,35 +247,7 @@ function dataStore(dataset, interface) {
     deleteById,
     save,
     load,
-    printAllRecords
+    printAllRecords,
+    getAllRecords
   };
 }
-
-const dbCollection = dataStore([], interfaceProps);
-
-console.log(
-  dbCollection.createRecord({
-    first_name: "Jason",
-    last_name: "Belcher",
-    gender: "Male",
-    email: "belcher.jason@gmail.com"
-  })
-);
-console.log(
-  dbCollection.createRecord({
-    first_name: "Alison",
-    last_name: "Belcher",
-    gender: "Female",
-    email: "alisonbelcher@gmail.com"
-  })
-);
-console.log(
-  dbCollection.createRecord({
-    first_name: "Ben",
-    last_name: "Belcher",
-    gender: "Male",
-    email: "benbelcher@gmail.com"
-  })
-);
-
-dbCollection.printAllRecords("DESC", "first_name");

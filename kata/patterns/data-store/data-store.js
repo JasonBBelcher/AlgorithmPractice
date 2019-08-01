@@ -94,20 +94,7 @@ function dataStore(dataset, interface) {
     }
     return dataset;
   }
-
-  // Print records with
-
-  function printAllRecords(direction, prop) {
-    if (!prop) {
-      setSortDirection(direction);
-    } else if (!prop || !direction) {
-    } else {
-      setSortDirection(direction);
-      setSortProp(prop);
-    }
-
-    console.table(sortDataset());
-  }
+  // ************************* END PRIVATE STUFF
 
   /****************************
         CRUD OPERATIONS
@@ -191,6 +178,20 @@ function dataStore(dataset, interface) {
     return dataset;
   }
 
+  // Print records with
+
+  function printAllRecords(direction, prop) {
+    if (!prop) {
+      setSortDirection(direction);
+    } else if (!prop || !direction) {
+    } else {
+      setSortDirection(direction);
+      setSortProp(prop);
+    }
+
+    console.table(sortDataset());
+  }
+
   // UPDATE
 
   function findByIdAndUpdate(id, updatedRecord) {
@@ -218,13 +219,15 @@ function dataStore(dataset, interface) {
   // DELETE
 
   function deleteById(id) {
+    let record = null;
     if (id) {
-      dataset.forEach((record, i) => {
-        if (record.id == id) {
-          console.log(dataset.splice(i, 1), " deleted");
-          return record;
+      dataset.forEach((r, i) => {
+        if (r.id == id) {
+          dataset.splice(i, 1);
+          record = r;
         }
       });
+      return record;
     } else {
       return { error: "please provide an id." };
     }

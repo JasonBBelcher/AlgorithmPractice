@@ -13,7 +13,6 @@ function linkedList() {
 
     if (head == null) {
       head = n;
-      console.log(head);
     } else {
       current = head;
       while (current.next) {
@@ -22,19 +21,51 @@ function linkedList() {
       current.next = n;
     }
     size += 1;
-    console.log(size);
+  }
+
+  function insertAt(data, index) {
+    // if outside bounds of linked list
+    if (index > 0 && index > size) {
+      return false;
+    } else {
+      // create node
+      let n = node(data);
+      let curr;
+      let prev;
+
+      curr = head;
+
+      // add the data to first index
+      if (index == 0) {
+        n.next = head;
+        head = n;
+      } else {
+        curr = head;
+        let position = 0;
+
+        while (position < index) {
+          position += 1;
+          prev = curr;
+          curr = curr.next;
+        }
+
+        n.next = curr;
+        prev.next = n;
+      }
+      size += 1;
+    }
   }
 
   function printLinkedList() {
     let curr = head;
 
     while (curr) {
-      console.log(curr);
+      console.dir(JSON.stringify(curr));
       curr = curr.next;
     }
   }
 
-  return { addData, printLinkedList };
+  return { addData, insertAt, printLinkedList };
 
   // insertAt
   // removeFrom
@@ -44,6 +75,7 @@ function linkedList() {
 const ls1 = linkedList();
 ls1.addData({ name: "Jason" });
 ls1.addData({ name: "Alison" });
+ls1.insertAt({ name: "Jerry" }, 1);
 ls1.printLinkedList();
 
 class Node {
@@ -81,15 +113,15 @@ class LinkedList {
   printLinkedList() {
     let curr = this.head;
     while (curr) {
-      console.log(curr);
+      console.dir(curr);
       curr = curr.next;
     }
   }
 }
 
-const ls = new LinkedList(Node);
-ls.add({ name: "Alison" });
-ls.add({ name: "Jason" });
-ls.add({ name: "Ben" });
-ls.add({ name: "Andre" });
-ls.printLinkedList();
+// const ls = new LinkedList(Node);
+// ls.add({ name: "Alison" });
+// ls.add({ name: "Jason" });
+// ls.add({ name: "Ben" });
+// ls.add({ name: "Andre" });
+// ls.printLinkedList();

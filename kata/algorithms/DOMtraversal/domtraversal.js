@@ -1,4 +1,4 @@
-// Walk the DOM and find all occurences of a word or phrase mentioned on a web page.
+// Walk the DOM and find number of occurences of a word or phrase mentioned on a web page.
 
 function walk(node, callback) {
   if (callback(node) === false) return false;

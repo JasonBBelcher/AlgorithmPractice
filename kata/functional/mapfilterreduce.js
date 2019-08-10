@@ -4,7 +4,7 @@ function map(array, cb) {
   let i;
   let mapped = [];
   for (i = 0; i < array.length; i += 1) {
-    total.push(cb(array[i]));
+    mapped.push(cb(array[i]));
   }
   return mapped;
 }
@@ -60,13 +60,13 @@ function reduce(array, cb, accumulator) {
   for (i = 0; i < array.length; i += 1) {
     if (!accumulator) {
       accumulator = array[i];
+    } else {
+      accumulator = cb(accumulator, array[i]);
     }
-    accumulator = cb(accumulator, array[i]);
   }
   return accumulator;
 }
 
-const arr3 = [1, 2, 3, 4];
 const arr4 = [
   { key1: "test1", key2: "test2" },
   { key1: "test3", key2: "test4" },
@@ -80,11 +80,15 @@ const arr4 = [
 
 // test out the method  on simple numbers and objects.
 
-const summed = reduce(arr3, num => {
-  return 2 * num;
+const arr3 = [1, 2, 3, 4];
+
+const summed = reduce(arr3, (acc, curr) => {
+  return acc + curr;
 });
 
-console.log(summed);
+// output is 10
+
+console.log("summed: ", summed);
 
 combinedObjects = reduce(
   arr4,

@@ -48,9 +48,20 @@ function walkitDown(node) {
   }
 }
 
+function countDown(num) {
+  if (num == 0) {
+    return console.log("Boom!");
+  } else {
+    console.log(num);
+    setTimeout(() => {
+      return countDown(num - 1);
+    }, 1000);
+  }
+}
+
 function sumRecursive(n) {
-  if (n == 0) {
-    return 0;
+  if (n == 1) {
+    return 1;
   } else {
     return n + sumRecursive(n - 1);
   }
@@ -99,32 +110,33 @@ function fibMemo(num, memo) {
   return (memo[num] = fibMemo(num - 1, memo) + fibMemo(num - 2, memo));
 }
 
-console.log(walkitDown(testObj));
-console.log(sumRecursive(10));
-console.log(factorial(5));
+// console.log(walkitDown(testObj));
+console.log(sumRecursive(3));
+// console.log(factorial(5));
 
-console.log(fib(4));
+// console.log(fib(4));
 
-console.log(
-  fizzBuzzRecursive([
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19
-  ])
-);
+// console.log(
+//   fizzBuzzRecursive([
+//     1,
+//     2,
+//     3,
+//     4,
+//     5,
+//     6,
+//     7,
+//     8,
+//     9,
+//     10,
+//     11,
+//     12,
+//     13,
+//     14,
+//     15,
+//     16,
+//     17,
+//     18,
+//     19
+//   ])
+// );
+// countDown(10);
